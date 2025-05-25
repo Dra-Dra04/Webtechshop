@@ -1,8 +1,15 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Webtechshop.Models;
+using Webtechshop.Models.Momo;
 using Webtechshop.Repository;
+using Webtechshop.Services.Momo;
 
 var builder = WebApplication.CreateBuilder(args);
-
+//Connect Momo API
+builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
+builder.Services.AddScoped<IMomoService, MomoService>();
 //Conection DB
 builder.Services.AddDbContext<DataContext>(options =>
 {
@@ -19,6 +26,22 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30);
     options.Cookie.IsEssential = true;
 });
+//Khai báo Identity
+builder.Services.AddIdentity<AppUserModel,IdentityRole>()
+    .AddEntityFrameworkStores<DataContext>().AddDefaultTokenProviders();
+
+
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    // Password settings.
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 4;
+
+    options.User.RequireUniqueEmail = false;
+});
 
 var app = builder.Build();
 
@@ -33,7 +56,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication();// ??ng nh?p
+
+app.UseAuthorization();//ki?m tra quy?n 
 
 app.MapControllerRoute(
     name: "Areas",

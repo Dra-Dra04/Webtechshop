@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Webtechshop.Models;
 
 namespace Webtechshop.Repository
@@ -8,7 +9,7 @@ namespace Webtechshop.Repository
             public static void SeedingData(DataContext _context)
             {
                 _context.Database.Migrate();
-                if (!_context.Products.Any())
+            if (!_context.Products.Any())
                 {
                     CategoryModel Phone = new CategoryModel { Name = "Iphone 16 pro", Slug="Phone", Description="Phone is popular of the world", Status="1" };
                     CategoryModel Laptop = new CategoryModel { Name = "Laptop", Slug="Laptop", Description="Laptop is popular of the world", Status="1" };
@@ -22,6 +23,19 @@ namespace Webtechshop.Repository
                      );
                     _context.SaveChanges();
                 }
+            if (!_context.Roles.Any())
+            {
+                var roles = new List<IdentityRole>
+                {
+                    new IdentityRole {Name ="Admin",NormalizedName = "ADMIN"},
+                    new IdentityRole {Name ="Guest",NormalizedName = "GUEST"}
+                };
+                foreach (var role in roles)
+                {
+                    _context.Roles.Add(role);
+                }
+                _context.SaveChanges();
+            }
             }
     }
 }

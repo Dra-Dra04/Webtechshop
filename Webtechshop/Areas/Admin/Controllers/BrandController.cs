@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webtechshop.Models;
 using Webtechshop.Repository;
@@ -6,6 +7,8 @@ using Webtechshop.Repository;
 namespace Webtechshop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/Brand")]
+    [Authorize(Roles = "Admin")]
     public class BrandController : Controller
     {
         private readonly DataContext _dataContext;
@@ -13,17 +16,21 @@ namespace Webtechshop.Areas.Admin.Controllers
         {
             _dataContext=context;
         }
+        [HttpGet]
+        [Route("Index")]
         public async Task<IActionResult> Index()
         {
             return View(await _dataContext.Brands.OrderByDescending(p => p.Id).ToListAsync());
         }
-
+        [HttpGet]
+        [Route("Create")]
         public async Task<IActionResult> Create()
         {
             return View();
         }
-        //[Route("Create")]
+
         [HttpPost]
+        [Route("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(BrandModel brand)
         {
@@ -59,7 +66,8 @@ namespace Webtechshop.Areas.Admin.Controllers
             }
             return View(brand);
         }
-
+        [HttpGet]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(int Id)
         {
             BrandModel category = await _dataContext.Brands.FindAsync(Id);
@@ -68,6 +76,7 @@ namespace Webtechshop.Areas.Admin.Controllers
 
         //[Route("Edit")]
         [HttpPost]
+        [Route("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(BrandModel brand)
         {
@@ -97,6 +106,8 @@ namespace Webtechshop.Areas.Admin.Controllers
             }
             return View(brand);
         }
+        [HttpGet]
+        [Route("Delete")]
         public async Task<IActionResult> Delete(int Id)
         {
             BrandModel brand = await _dataContext.Brands.FindAsync(Id);

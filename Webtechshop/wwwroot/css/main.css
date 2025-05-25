@@ -1534,6 +1534,7 @@ h2.title {
   background:transparent;
   margin-bottom: 75px;
   padding-left: 0;
+  
 }
 
 .breadcrumbs .breadcrumb li a {
@@ -1579,7 +1580,7 @@ h2.title {
 
 
 #cart_items .cart_info .table.table-condensed tr {
-  border-bottom: 1px solid#F7F7F0
+	border-bottom: 1px solid#F7F7F0
 }
 
 #cart_items .cart_info .table.table-condensed tr:last-child {
@@ -2520,4 +2521,27 @@ h2.title {
   color: #FE980F;
 }
 
+.cart-summary-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
 
+.cart-grand-total {
+	font-size: 18px;
+	white-space: nowrap;
+	margin-right: 15px; /* Thêm khoảng cách với cụm nút nếu cần */
+}
+
+.cart-action-buttons > form,
+.cart-action-buttons > a {
+	display: inline-block;
+	margin-left: 8px; /* Khoảng cách giữa các nút */
+}
+
+	.cart-action-buttons > form:first-child,
+	.cart-action-buttons > a:first-child {
+		margin-left: 0; /* Không cần margin cho nút đầu tiên trong cụm */
+	}

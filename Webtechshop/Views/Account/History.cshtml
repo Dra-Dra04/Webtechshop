@@ -1,0 +1,56 @@
+﻿@model IEnumerable<OrderModel>
+@{
+    ViewData["title"] = "History List" + @ViewBag.UserEmail;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <h3>Danh sách đơn hàng của @ViewBag.UserEmail</h3>
+    <table class="table" id="myTable">
+        <thead>
+            <tr>
+                <th>Mã đơn hàng</th>
+                <th>Tên khách hàng</th>
+                <th>Ngày tạo</th>
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.OrderCode</td>
+                    <td>@item.UserName</td>
+                    <td>@item.CreateDate.ToString("dd/MM/yyyy")</td>
+                    <td>
+                        @if (@item.Status == 1)
+                        {
+                            <span class="text text-success">Đơn hàng mới</span>
+                        }
+                        else if (@item.Status == 2)
+                        {
+                            <span class="text text-warning">Đơn hàng đã xử lý</span>
+                        }
+                        else
+                        {
+                            <span class="text text-danger">Đơn hàng đã hủy</span>
+                        }
+                    </td>
+                    <td>
+                        @if (item.Status != 3)
+                        {
+                            <a class="btn btn-danger btn-sm" asp-action="CancelOrder" asp-controller="Account" asp-route-ordercode="@item.OrderCode">Hủy</a>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</body>
+</html>

@@ -24,10 +24,10 @@
 
 					<!-- Controls -->
 					<a class="left item-control" href="#similar-product" data-slide="prev">
-						<i class="fa fa-angle-left"></i>
+						
 					</a>
 					<a class="right item-control" href="#similar-product" data-slide="next">
-						<i class="fa fa-angle-right"></i>
+					
 					</a>
 				</div>
 
@@ -39,11 +39,8 @@
 					<span>
 						<span>@Model.Price.ToString("#,##0 VNĐ")</span>
 						<label>Quantity:</label>
-						<input type="text" value="3" />
-						<button type="button" class="btn btn-fefault cart">
-							<i class="fa fa-shopping-cart"></i>
-							Add to cart
-						</button>
+						<input type="text" value="1" />
+						<a class="btn btn-default add-to-cart" asp-action="Add" asp-controller="Cart" asp-route-Id="@Model.Id">Thêm vào giỏ hàng</a>
 					</span>
 					<p><b>Thương hiệu:</b> @Model.Brand.Name</p>
 					<p><b>Loại hàng:</b> @Model.Category.Name</p>
@@ -56,10 +53,9 @@
 			<!--category-tab-->
 			<div class="col-sm-12">
 				<ul class="nav nav-tabs">
-					<li class="active"><a href="#details" data-toggle="tab">Details</a></li>
-					<li><a href="#companyprofile" data-toggle="tab">Company Profile</a></li>
+					<li class="active"><a href="#details" data-toggle="tab">Chi tiết</a></li>
 					<li><a href="#tag" data-toggle="tab">Tag</a></li>
-					<li class="active"><a href="#reviews" data-toggle="tab">Đánh giá (5)</a></li>
+					<li class="active"><a href="#reviews" data-toggle="tab">Đánh giá </a></li>
 				</ul>
 			</div>
 			<div class="tab-content">

@@ -5,7 +5,7 @@
 	<div class="container">
 		<div class="breadcrumbs">
 			<ol class="breadcrumb">
-				<li><a href="#">Ttrang chủ</a></li>
+				<li><a href="Home">Trang chủ</a></li>
 				<li class="active">Giỏ hàng</li>
 			</ol>
 		</div>
@@ -13,12 +13,11 @@
 			<table class="table table-condensed">
 				<thead>
 					<tr class="cart_menu">
-						<td class="image">Item</td>
-						<td class="description"></td>
-						<td class="price">Price</td>
-						<td class="quantity">Quantity</td>
-						<td class="total">Total</td>
-						<td></td>
+						<td class="image">Ảnh sản phẩm</td>
+						<td class="description">Tên sản phẩm</td>
+						<td class="price">Giá</td>
+						<td class="quantity">Số lượng</td>
+						<td class="total">Tổng tiền</td>
 					</tr>
 				</thead>
 
@@ -29,7 +28,7 @@
 						foreach (var item in Model.CartItems)
 						{
 
-							<tr>
+							<tr style="vertical-align:middle;">
 								<td class="cart_product">
 									<a href=""><img src="~/Images/@item.Image" alt="" width="100px" height="100px"></a>
 								</td>
@@ -40,7 +39,6 @@
 									<p>@item.Price.ToString("#,##0 VNĐ")</p>
 								</td>
 								<td class="">
-
 									<a class="btn btn-default btn-sm" asp-action="Increase" asp-controller="Cart" asp-route-id="@item.ProductId"> + </a>
 									<input class="btn btn-default btn-sm" type="text" name="quantity" value="@item.Quantity" autocomplete="off" size="2">
 									<a class="btn btn-default btn-sm" asp-action="Decrease" asp-controller="Cart" asp-route-id="@item.ProductId"> - </a>
@@ -51,11 +49,29 @@
 									<p class="cart_total_price">@Model.CartItems.Where(x => x.ProductId == item.ProductId).Sum(x => x.Quantity * x.Price).ToString("#,##0")</p>
 								</td>
 							</tr>
+							}
 							<tr>
-								<td colspan="6">Tổng cộng: @Model.GrandTotal.ToString("#,##0 VND")</td>
+							<td colspan="6" style="font-size: 18px;padding-top: 20px; padding-bottom: 20px; vertical-align: middle;">Tổng cộng: @Model.GrandTotal.ToString("#,##0 VND")</td>
 							</tr>
+						<tr >
+							<td colspan ="6" style="text-align: right; padding-top:10px; padding-bottom:15px;">
+								<form asp-action="Clear" asp-controller="Cart" method="post" style="display: inline-block; margin-left: 10px;">
+									<button type="submit" class="btn btn-danger cart-action-button">Xóa toàn bộ giỏ hàng</button>
+								</form>
 
-						}
+							@if (User.Identity?.IsAuthenticated ?? false){
+
+									<a class="btn btn-success cart-action-button" asp-action="Checkout" asp-controller="Checkout" style="display: inline-block; margin-left: 10px;">Thanh toán</a><br />
+									<form method="post" asp-action="CreatePaymentMomo" asp-controller="Payment" style="margin-top: 10px;">
+										<input type="hidden" name="Amount" value="@Model.GrandTotal" />
+										<input type="hidden" name="OrderId" value="@Guid.NewGuid().ToString()" />
+										<input type="hidden" name="OrderInfo" value="Thanh toán MOMO cho đơn hàng tại shop" />
+										<input type="hidden" name="FullName" value="Nhóm 5" />
+										<button class="btn btn-danger" type="submit">Trả bằng ví MoMo</button>
+									</form>
+							}							
+							</td>
+						</tr>
 					}
 					else
 					{
@@ -64,6 +80,13 @@
 								<h4>Giỏ hàng của bạn đang trống.</h4>
 							</td>
 						</tr>
+					}
+
+					@if (TempData["success"] != null)
+					{
+						<div class="alert alert-success">
+							@TempData["success"]
+						</div>
 					}
 
 				</tbody>

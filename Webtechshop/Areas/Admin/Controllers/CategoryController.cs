@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,8 @@ using Webtechshop.Repository;
 namespace Webtechshop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/Category")]
+    [Authorize(Roles = "Admin")]
     public class CategoryController : Controller
     {
         private readonly DataContext _dataContext;
@@ -16,18 +19,36 @@ namespace Webtechshop.Areas.Admin.Controllers
         {
             _dataContext=context;
         }
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        [Route("Index")]
+        /*public async Task<IActionResult> Index()
         {
-            return View(await _dataContext.Categories.OrderByDescending(p => p.Id).ToListAsync());
+          return View(await _dataContext.Categories.OrderByDescending(p => p.Id).ToListAsync());
+        }*/
+        public async Task<IActionResult> Index(int pg =1)
+        {
+            List<CategoryModel> category = _dataContext.Categories.ToList();
+            const int pageSize = 10;
+            if(pg < 1)
+            {
+                pg = 1;
+            }
+            int recsCount = category.Count();
+            var pager = new Paginate(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = category.Skip(recSkip).Take(pager.PageSize).ToList();
+            ViewBag.Paper = pager;
+            return View(data);
         }
-        
-        //[Route("Create")]
+        [HttpGet]
+        [Route("Create")]
         public async Task<IActionResult> Create()
         {
             return View();
         }
-        //[Route("Create")]
+
         [HttpPost]
+        [Route("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryModel category)
         {
@@ -43,13 +64,13 @@ namespace Webtechshop.Areas.Admin.Controllers
 
                 _dataContext.Add(category);
                 await _dataContext.SaveChangesAsync();
-                //TempData["success"] = "Thêm sản phẩm thành công";
+                TempData["success"] = "Thêm sản phẩm thành công";
                 return RedirectToAction("Index");
 
             }
             else
             {
-                //TempData["error"] = "Model có một vài thứ đang lỗi";
+                TempData["error"] = "Model có một vài thứ đang lỗi";
                 List<string> errors = new List<string>();
                 foreach (var value in ModelState.Values)
                 {
@@ -63,14 +84,17 @@ namespace Webtechshop.Areas.Admin.Controllers
             }
             return View(category);
         }
+        [HttpGet]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(int Id)
         {
             CategoryModel category = await _dataContext.Categories.FindAsync(Id);
             return View(category);
         }
 
-        //[Route("Edit")]
+
         [HttpPost]
+        [Route("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CategoryModel category)
         {
@@ -101,6 +125,8 @@ namespace Webtechshop.Areas.Admin.Controllers
             return View(category);
         }
 
+        [HttpGet]
+        [Route("Delete")]
         public async Task<IActionResult> Delete(int Id)
         {
         CategoryModel category = await _dataContext.Categories.FindAsync(Id);

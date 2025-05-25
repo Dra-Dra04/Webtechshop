@@ -100,8 +100,13 @@ namespace Webtechshop.Controllers
             {
                 HttpContext.Session.SetJson("Cart", cart);
             }
-
             return RedirectToAction("Index");
         }
+        public IActionResult Clear()
+        {
+            HttpContext.Session.Remove("Cart");
+            return RedirectToAction("Index");
+        }
+
     }
 }

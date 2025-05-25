@@ -19,7 +19,7 @@ namespace Webtechshop.Controllers
 
         public IActionResult Index()
         {
-            var products = _dataContext.Products.Include("Category").Include("Brand").ToList();
+            List<ProductModel> products = _dataContext.Products.Include("Category").Include("Brand").ToList();
             return View(products);
         }
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Webtechshop.Models;
@@ -7,6 +8,8 @@ using Webtechshop.Repository;
 namespace Webtechshop.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Route("Admin/Product")]
+    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly DataContext _dataContext;
@@ -16,12 +19,15 @@ namespace Webtechshop.Areas.Admin.Controllers
             _dataContext=context;
             _webHostEnviroment=webHostEnviroment;
         }
+        [HttpGet]
+        [Route("Index")]
         public async Task<IActionResult> Index()
         {
             return View(await _dataContext.Products.OrderByDescending(p => p.Id).Include(c => c.Category).Include(b => b.Brand).ToListAsync());
         }
         // Chức năng thêm mới sản phẩm
         [HttpGet]
+        [Route("Create")]
         public async Task<IActionResult> Create()
         {
             ViewBag.Categories = new SelectList(_dataContext.Categories, "Id", "Name");
@@ -29,6 +35,7 @@ namespace Webtechshop.Areas.Admin.Controllers
             return View();
         }
         [HttpPost]
+        [Route("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductModel product)
         {
@@ -57,13 +64,13 @@ namespace Webtechshop.Areas.Admin.Controllers
 
                 _dataContext.Add(product);
                 await _dataContext.SaveChangesAsync();
-                //TempData["success"] = "Thêm sản phẩm thành công";
+                TempData["success"] = "Thêm sản phẩm thành công";
                 return RedirectToAction("Index");
 
             }
             else
             {
-                //TempData["error"] = "Model có một vài thứ đang lỗi";
+                TempData["error"] = "Model có một vài thứ đang lỗi";
                 List<string> errors = new List<string>();
                 foreach (var value in ModelState.Values)
                 {
@@ -78,7 +85,8 @@ namespace Webtechshop.Areas.Admin.Controllers
             return View(product);
         }
         // Chức năng edit sản phẩm
-
+        [HttpGet]
+        [Route("Edit")]
         public async Task<IActionResult> Edit(int Id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(Id);
@@ -90,6 +98,7 @@ namespace Webtechshop.Areas.Admin.Controllers
 
 
         [HttpPost]
+        [Route("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(ProductModel product)
         {
@@ -141,8 +150,8 @@ namespace Webtechshop.Areas.Admin.Controllers
             }
             return View(product);
         }
-
-
+        [HttpGet]
+        [Route("Delete")]
         public async Task<IActionResult> Delete(int Id)
         {
             ProductModel product = await _dataContext.Products.FindAsync(Id);
