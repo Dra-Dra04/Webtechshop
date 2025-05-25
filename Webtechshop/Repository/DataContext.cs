@@ -5,7 +5,7 @@ using Webtechshop.Models;
 
 namespace Webtechshop.Repository
 {
-    public class DataContext : IdentityDbContext
+    public class DataContext : IdentityDbContext<AppUserModel>
     {
         public DataContext(DbContextOptions<DbContext> options) : base(options)
         {

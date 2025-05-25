@@ -48,7 +48,7 @@
 									<ul role="menu" class="sub-menu">
 										<li><a asp-controller="Cart" asp-action="Checkout">Thanh toán</a></li>
 										<li><a asp-controller="Cart">Giỏ hàng</a></li>
-										<li><a asp-controller="Login">Đăng nhập</a></li>
+										<li><a asp-controller="Account" asp-action="Login">Đăng nhập</a></li>
 									</ul>
 								</li>
 								<li class="dropdown">
@@ -314,5 +314,6 @@
 	<script src="~/js/price-range.js"></script>
 	<script src="~/js/jquery.prettyPhoto.js"></script>
 	<script src="~/js/main.js"></script>
+	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
