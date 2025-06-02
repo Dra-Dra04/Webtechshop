@@ -32,7 +32,7 @@ namespace Webtechshop.Controllers
             {
                 Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.PasswordSignInAsync(LoginVM.Username, LoginVM.Password, false, false);
                 if (result.Succeeded)
-                {
+        {
                     return Redirect(LoginVM.ReturnUrl ?? "/");
                 }
                 ModelState.AddModelError("", "Tên đăng nhập hoặc mật khẩu không đúng");
@@ -82,19 +82,19 @@ namespace Webtechshop.Controllers
         {
             if (ModelState.IsValid)
             {
-                AppUserModel newUser = new AppUserModel { UserName = user.Username, Email = user.Email };
+            AppUserModel newUser = new AppUserModel { UserName = user.Username, Email = user.Email };
                 IdentityResult result = await _userManager.CreateAsync(newUser, user.Password);
                 if (result.Succeeded)
                 {
                     TempData["success"] = "Tạo tài khoản thành công";
                     return Redirect("/account/login");
                 }
-
+                
                 foreach (IdentityError error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
-
+                
             }
 
             return View(user);
